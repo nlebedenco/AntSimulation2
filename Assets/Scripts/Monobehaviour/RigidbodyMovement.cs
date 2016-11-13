@@ -4,16 +4,21 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody))]
 public class RigidbodyMovement: MonoBehaviour, ICharacterMovement
 {
-    public float maximumMoveSpeed = 20;
-
-    public float moveForce = 6.0F;
+    
+    public float moveForce = 20.0f;
     public ForceMode moveForceMode = ForceMode.VelocityChange;
+    public float moveDrag = 16.65f;
 
-    public float jumpForce = 8.0F;
+    [ReadOnly(RunMode.Any)]
+    public float groundSpeed;
+
+    public float gravity = 100f;
+
+    public float jumpForce = 8.0f;
     public ForceMode jumpForceMode = ForceMode.Impulse;
 
     public bool turnToDirectionOfMovement = true;
-    public float turnSpeed = 540;
+    public float turnSpeed = 540f;
 
     public float groundCheckRadius = 0.5f;
     public string groundLayer = "Ground";
@@ -26,8 +31,6 @@ public class RigidbodyMovement: MonoBehaviour, ICharacterMovement
     private bool desiredJump = false;
 
     private int groundLayerMask;
-
-    private float horizontalDrag = 0;
 
     public void Stop()
     {
@@ -49,47 +52,55 @@ public class RigidbodyMovement: MonoBehaviour, ICharacterMovement
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
+        rb.useGravity = false;
+
         groundLayerMask = LayerMask.GetMask(groundLayer);
     }
 
-    public float speed;
     void Update()
     {
-        if (turnToDirectionOfMovement)
-        {
-            //var lookAt = rb.velocity;
-            //if (!(Mathf.Approximately(lookAt.x, 0) && Mathf.Approximately(lookAt.z, 0)))
-            //{
-            //    lookAt.y = 0;
-            //    var targetRotation = Quaternion.LookRotation(lookAt);
-            //
-            //    float angle = Quaternion.Angle(transform.rotation, targetRotation);
-            //    float timeToComplete = angle / turnSpeed;
-            //    float ratio = Mathf.Min(1, Time.deltaTime / timeToComplete);
-            //    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, ratio);
-            //}
-        }
+        //if (turnToDirectionOfMovement)
+        //{
+        //    var lookAt = rb.velocity;
+        //    if (!(Mathf.Approximately(lookAt.x, 0) && Mathf.Approximately(lookAt.z, 0)))
+        //    {
+        //        lookAt.y = 0;
+        //        var targetRotation = Quaternion.LookRotation(lookAt);
+        //    
+        //        float angle = Quaternion.Angle(transform.rotation, targetRotation);
+        //        float timeToComplete = angle / turnSpeed;
+        //        float ratio = Mathf.Min(1, Time.deltaTime / timeToComplete);
+        //        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, ratio);
+        //    }
+        //}
     }
 
     void FixedUpdate()
     {
-        horizontalDrag = (2 * rb.mass * moveForce) / (maximumMoveSpeed * maximumMoveSpeed);
+        // moveDrag = (2 * moveForce) / (moveSpeed * moveSpeed);
 
         isGrounded = Physics.CheckSphere(transform.position, groundCheckRadius, groundLayerMask);
 
         if (isGrounded)
         {
-            rb.AddForce(desiredDirection * moveForce * Time.deltaTime, moveForceMode);
+            rb.AddForce(desiredDirection * moveForce, moveForceMode);
+
+            //moveDrag = 200 * moveForce / moveSpeed / moveSpeed;
+            // Apply horizontal drag for maxSpeed
+            rb.velocity *= Mathf.Clamp01(1f - (moveDrag * Time.deltaTime));
+
             if (desiredJump)
                 rb.AddForce(transform.up * jumpForce, jumpForceMode);
+        }
+        else
+        {
+            rb.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
         }
 
         desiredJump = false;
 
-        // Apply horizontal drag for maxSpeed
-        //rb.velocity -= new Vector3(rb.velocity.x, 0, rb.velocity.z) * horizontalDrag * Time.deltaTime;
-
-        speed = rb.velocity.magnitude;
+        groundSpeed = rb.velocity.magnitude;
     }
 
     #endregion

@@ -273,8 +273,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 420335361}
   - 33: {fileID: 420335360}
-  - 64: {fileID: 420335359}
   - 23: {fileID: 420335358}
+  - 65: {fileID: 420335359}
   m_Layer: 8
   m_Name: Floor
   m_TagString: Untagged
@@ -308,8 +308,8 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!64 &420335359
-MeshCollider:
+--- !u!65 &420335359
+BoxCollider:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -318,8 +318,8 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Convex: 0
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  m_Size: {x: 10, y: 0.5, z: 10}
+  m_Center: {x: 0, y: -0.25, z: 0}
 --- !u!33 &420335360
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -750,7 +750,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nestPrefab: {fileID: 0}
   foodPrefab: {fileID: 0}
-  predatorPrefab: {fileID: 11402024, guid: dfca322ede517d342a9720b4f6639c4c, type: 2}
+  predatorPrefab: {fileID: 11402024, guid: 08093fe46b0a8ea479044f6bf2afb3ed, type: 2}
   pheromoneGridWidth: 2000
   pheromoneGridHeight: 2000
   pheromoneGridScale: 1
