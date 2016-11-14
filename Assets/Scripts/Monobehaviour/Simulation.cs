@@ -20,36 +20,68 @@ public class Simulation : MonoBehaviour
     public Predator predatorPrefab;
 
     [ReadOnly]
-    public uint pheromoneGridWidth = 2000;
+    public float startDelay = 1f;
 
     [ReadOnly]
-    public uint pheromoneGridHeight = 2000;
+    public bool nestSpawnEnabled = false;
+    private bool canSpawnNests = false;
 
     [ReadOnly]
-    public float pheromoneGridScale = 1.0f;
+    public int maxNumberOfNests = 1;
 
-    public bool antsCanCommunicateFear = true;
+    [ReadOnly]
+    public float nestSpawnRate = 0.25f;
+
+    [ReadOnly]
+    public float minNestSpawnRadius = 50;
+
+    [ReadOnly]
+    public float maxNestSpawnRadius = 100;
+
+#if UNITY_EDITOR
+    [ReadOnly(RunMode.Any)]
+    public int numberOfSpawnedNests;
+#endif
+
+    [ReadOnly]
+    public uint pheromoneGridWidth = 100;
+
+    [ReadOnly]
+    public uint pheromoneGridHeight = 100;
+
+    [ReadOnly]
+    public float pheromoneGridSquareSize = 1.0f;
 
     private List<Predator> predators = new List<Predator>();
     private List<Nest> nests = new List<Nest>();
 
     private Pheromone[,] pheromoneGrid;     // initialized on Awake()
+    private float nestSpawnDeltaTime;
 
-    private bool _enableFear;
-    public bool FearEnabled
+    private IEnumerator DelayedStart()
     {
-        get { return _enableFear; }
-        private set
-        {
-            if (value != _enableFear)
-            {
-                Ant[] agents = GameObject.FindObjectsOfType<Ant>();
-                for (int i = 0; i < agents.Length; ++i)
-                    agents[i].isFearContagious = value;
+        yield return new WaitForSeconds(startDelay);
+        predators.Add(CreatePredator());
+        nestSpawnEnabled = true;
+    }
 
-                _enableFear = value;
-            }
-        }
+
+    private Predator CreatePredator()
+    {
+        Predator predator = Instantiate<Predator>(predatorPrefab);
+        Camera.main.GetComponent<CameraFollow>().target = predator.transform;
+        return predator;
+    }
+
+    private Nest CreateNest()
+    {
+        float spawnDistance = Random.Range(minNestSpawnRadius, maxNestSpawnRadius);
+        Vector2 point = (Random.insideUnitCircle.normalized) * spawnDistance;
+        Vector3 spawnPoint = transform.position + new Vector3(point.x, 0, point.y);
+
+        Nest nest = Instantiate<Nest>(nestPrefab);
+        nest.transform.position = spawnPoint;
+        return nest;
     }
 
     #region Unity Events
@@ -75,17 +107,36 @@ public class Simulation : MonoBehaviour
 
     void Start()
     {
-        var predator = Instantiate<Predator>(predatorPrefab);
-        Camera.main.GetComponent<CameraFollow>().target = predator.transform;
-        predators.Add(predator);
-
-
+        StartCoroutine(DelayedStart());
     }
+
 
     void Update()
     {
-        // Update fear communication for all agents
-        FearEnabled = antsCanCommunicateFear;
+        if (canSpawnNests != nestSpawnEnabled)
+        {
+            if (nestSpawnEnabled)
+                nestSpawnDeltaTime = 0;
+
+            canSpawnNests = nestSpawnEnabled;
+        }
+
+        if (canSpawnNests)
+        {
+            nestSpawnDeltaTime += Time.deltaTime;
+            float spawnPeriod = 1f / nestSpawnRate;
+            while (nests.Count < maxNumberOfNests && nestSpawnDeltaTime >= spawnPeriod)
+            {
+                Nest nest = CreateNest();
+                nests.Add(nest);
+
+                #if UNITY_EDITOR
+                numberOfSpawnedNests = nests.Count;
+                #endif
+
+                nestSpawnDeltaTime -= spawnPeriod;
+            }
+        }
     }
 
     #endregion

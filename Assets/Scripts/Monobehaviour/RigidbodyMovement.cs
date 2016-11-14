@@ -2,20 +2,26 @@
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CameraShake))]
 public class RigidbodyMovement: MonoBehaviour, ICharacterMovement
 {
-    
+    public bool enableCameraShakeOnLanding = false;
+    public float cameraShakeIntensity = 0.0025f;
+    public float cameraShakeDuration = 0.1f;
+
     public float moveForce = 20.0f;
     public ForceMode moveForceMode = ForceMode.VelocityChange;
     public float moveDrag = 16.65f;
 
+#if UNITY_EDITOR
     [ReadOnly(RunMode.Any)]
     public float groundSpeed;
+#endif
+
+    public float jumpForce = 70.0f;
+    public ForceMode jumpForceMode = ForceMode.Impulse;
 
     public float gravity = 100f;
-
-    public float jumpForce = 8.0f;
-    public ForceMode jumpForceMode = ForceMode.Impulse;
 
     public bool turnToDirectionOfMovement = true;
     public float turnSpeed = 540f;
@@ -24,8 +30,10 @@ public class RigidbodyMovement: MonoBehaviour, ICharacterMovement
     public string groundLayer = "Ground";
 
     public bool isGrounded { get; private set; }
+    private bool isJumping = false;
 
     private Rigidbody rb;
+    private CameraShake cameraShake;
 
     private Vector3 desiredDirection = Vector3.zero;
     private bool desiredJump = false;
@@ -55,43 +63,34 @@ public class RigidbodyMovement: MonoBehaviour, ICharacterMovement
         rb.freezeRotation = true;
         rb.useGravity = false;
 
-        groundLayerMask = LayerMask.GetMask(groundLayer);
-    }
+        cameraShake = GetComponent<CameraShake>();
 
-    void Update()
-    {
-        //if (turnToDirectionOfMovement)
-        //{
-        //    var lookAt = rb.velocity;
-        //    if (!(Mathf.Approximately(lookAt.x, 0) && Mathf.Approximately(lookAt.z, 0)))
-        //    {
-        //        lookAt.y = 0;
-        //        var targetRotation = Quaternion.LookRotation(lookAt);
-        //    
-        //        float angle = Quaternion.Angle(transform.rotation, targetRotation);
-        //        float timeToComplete = angle / turnSpeed;
-        //        float ratio = Mathf.Min(1, Time.deltaTime / timeToComplete);
-        //        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, ratio);
-        //    }
-        //}
+        groundLayerMask = LayerMask.GetMask(groundLayer);
     }
 
     void FixedUpdate()
     {
-        // moveDrag = (2 * moveForce) / (moveSpeed * moveSpeed);
-
         isGrounded = Physics.CheckSphere(transform.position, groundCheckRadius, groundLayerMask);
 
         if (isGrounded)
         {
-            rb.AddForce(desiredDirection * moveForce, moveForceMode);
+            if (isJumping)
+            {
+                isJumping = false;
+                if (enableCameraShakeOnLanding)
+                {
+                    cameraShake.Shake(cameraShakeIntensity, cameraShakeDuration);
+                }
+            }
 
-            //moveDrag = 200 * moveForce / moveSpeed / moveSpeed;
-            // Apply horizontal drag for maxSpeed
-            rb.velocity *= Mathf.Clamp01(1f - (moveDrag * Time.deltaTime));
+            rb.AddForce(desiredDirection * moveForce, moveForceMode);
+            rb.velocity *= Mathf.Clamp01(1f - (moveDrag * Time.deltaTime));  // Apply ground move drag before jump
 
             if (desiredJump)
+            {
                 rb.AddForce(transform.up * jumpForce, jumpForceMode);
+                isJumping = true;
+            }
         }
         else
         {
@@ -100,7 +99,23 @@ public class RigidbodyMovement: MonoBehaviour, ICharacterMovement
 
         desiredJump = false;
 
+#if UNITY_EDITOR
         groundSpeed = rb.velocity.magnitude;
+#endif
+
+        if (turnToDirectionOfMovement)
+        {
+            if (desiredDirection != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(desiredDirection);
+                float angle = Quaternion.Angle(rb.rotation, targetRotation);
+                float timeToComplete = angle / turnSpeed;
+                float ratio = Mathf.Min(1, Time.deltaTime / timeToComplete);
+                Quaternion deltaRotation = Quaternion.AngleAxis(angle * turnSpeed * Time.deltaTime, transform.up);
+
+                rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, ratio));
+            }
+        }
     }
 
     #endregion
