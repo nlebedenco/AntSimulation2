@@ -840,7 +840,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11490446, guid: e9d82140f5b65354bbbf2a3dc4cdf542, type: 2}
       propertyPath: nestSpawnRate
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 11490446, guid: e9d82140f5b65354bbbf2a3dc4cdf542, type: 2}
       propertyPath: pheromoneGridWidth
@@ -853,6 +853,10 @@ Prefab:
     - target: {fileID: 11490446, guid: e9d82140f5b65354bbbf2a3dc4cdf542, type: 2}
       propertyPath: pheromoneGridSquareSize
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490446, guid: e9d82140f5b65354bbbf2a3dc4cdf542, type: 2}
+      propertyPath: maxNumberOfNests
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e9d82140f5b65354bbbf2a3dc4cdf542, type: 2}
