@@ -233,16 +233,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b747ed76b45084f48a922ca185f346aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  antPrefab: {fileID: 11475902, guid: efd61ffdacca6444ba0275d7c6f527cd, type: 2}
+  antPrefab: {fileID: 11463306, guid: 2725ef1025b7c634cb92aea39d708914, type: 2}
   autoEnableOnStart: 1
   autoEnableOnStartDelay: 3
   antSpawnEnabled: 0
-  maxNumberOfAnts: 500
+  maxNumberOfAnts: 100
   antSpawnRate: 10
-  minAntSpawnRadius: 1
+  antSpawnHeight: 2
+  minAntSpawnRadius: 2
   maxAntSpawnRadius: 5
   numberOfSpawnedAnts: 0
-  fearTransferEnabled: 0
 --- !u!135 &13583516
 SphereCollider:
   m_ObjectHideFlags: 1

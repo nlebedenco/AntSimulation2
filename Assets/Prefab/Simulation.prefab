@@ -8,7 +8,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 467136}
-  - 65: {fileID: 6568826}
   - 114: {fileID: 11490446}
   m_Layer: 0
   m_Name: Simulation
@@ -30,18 +29,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!65 &6568826
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 129300}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 100, y: 10, z: 100}
-  m_Center: {x: 0, y: 5.51, z: 0}
 --- !u!114 &11490446
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -60,11 +47,11 @@ MonoBehaviour:
   nestSpawnEnabled: 0
   maxNumberOfNests: 1
   nestSpawnRate: 0.25
-  minNestSpawnRadius: 50
+  minNestSpawnRadius: 0
   maxNestSpawnRadius: 100
   numberOfSpawnedNests: 0
-  pheromoneGridWidth: 100
-  pheromoneGridHeight: 100
+  pheromoneGridWidth: 1000
+  pheromoneGridHeight: 1000
   pheromoneGridSquareSize: 1
 --- !u!1001 &100100000
 Prefab:

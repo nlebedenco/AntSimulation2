@@ -6,35 +6,75 @@ public class CameraFollow : MonoBehaviour
     public Transform target;
     public bool enableCameraLag = false;
     public float lagSpeed = 10;
-    public bool freezeX = false;
-    public bool freezeY = false;
-    public bool freezeZ = false;
 
-    public Vector3 offset = Vector3.zero;
+    // Rotation
+
+    public float distance = 100.0f;
+    public float yawSpeed = 0.02f;
+    public float pitchSpeed = 0.02f;
+    public float zoomSpeed = 200f;
+
+    public float minPitchAngle = 10f;
+    public float maxPitchAngle = 90f;
+
+    public float minDistance = 10f;
+    public float maxDistance = 500f;
 
     #region Unity Events
 
+    float x = 0.0f;
+    float y = 0.0f;
+
+    void Start()
+    {
+        Vector3 angles = transform.eulerAngles;
+        x = angles.y;
+        y = angles.x;
+    }
+
     void LateUpdate()
     {
-        // Set the position of the camera's transform to be the same as the target, but offset by the calculated offset distance.
+        
         if (target != null)
         {
-            var newPosition = target.position + offset;
-            if (freezeX) newPosition.x = transform.position.x;
-            if (freezeY) newPosition.y = transform.position.y;
-            if (freezeZ) newPosition.z = transform.position.z;
+            bool movingCamera = Input.GetMouseButton(1);
+            if (movingCamera)
+            {
+                x += Input.GetAxis("Mouse X") * yawSpeed;
+                y -= Input.GetAxis("Mouse Y") * pitchSpeed;
 
-            if (enableCameraLag)
+                y = ClampAngle(y, minPitchAngle, maxPitchAngle);
+            }
+
+            Quaternion rotation = Quaternion.Euler(y, x, 0);
+
+            distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel") * zoomSpeed, minDistance, maxDistance);
+
+            Vector3 negDistance = new Vector3(0.0f, 0.0f, -distance);
+            Vector3 position = rotation * negDistance + target.position;
+
+            transform.rotation = rotation;
+            
+            if (!movingCamera && enableCameraLag)
             {
                 float step = lagSpeed * Time.deltaTime;
-                transform.position = Vector3.Lerp(transform.position, newPosition, step);
+                transform.position = Vector3.Lerp(transform.position, position, step);
             }
             else
             {
-                transform.position = newPosition;
+                transform.position = position;
             }
         }
     }
 
     #endregion
+
+    private static float ClampAngle(float angle, float min, float max)
+    {
+        while (angle < -360F)
+            angle += 360F;
+        while (angle > 360F)
+            angle -= 360F;
+        return Mathf.Clamp(angle, min, max);
+    }
 }

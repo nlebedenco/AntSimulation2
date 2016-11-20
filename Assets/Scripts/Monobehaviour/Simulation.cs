@@ -91,6 +91,7 @@ public class Simulation : MonoBehaviour
         {
             Simulation.instance = this;
 
+            UnityEngine.Random.seed = System.Environment.TickCount;
             pheromoneGrid = new Pheromone[pheromoneGridWidth, pheromoneGridHeight];
 
             // TODO: Spawn Nests

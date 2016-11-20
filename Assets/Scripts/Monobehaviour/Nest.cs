@@ -26,6 +26,9 @@ public class Nest : MonoBehaviour
     private float antSpawnDeltaTime = 0;
 
     [ReadOnly]
+    public float antSpawnHeight = 2f;
+
+    [ReadOnly]
     public float minAntSpawnRadius = 1;
 
     [ReadOnly]
@@ -36,8 +39,8 @@ public class Nest : MonoBehaviour
     public int numberOfSpawnedAnts;
 #endif
 
-    public bool fearTransferEnabled = false;
-    private bool canTransferFear = false;
+    // public bool fearTransferEnabled = false;
+    // private bool canTransferFear = false;
 
     private List<Ant> ants = new List<Ant>();    
 
@@ -103,7 +106,7 @@ public class Nest : MonoBehaviour
     {
         float spawnDistance = Random.Range(minAntSpawnRadius, maxAntSpawnRadius);
         Vector2 point = (Random.insideUnitCircle.normalized) * spawnDistance;
-        Vector3 spawnPoint = transform.position + new Vector3(point.x, 0, point.y);
+        Vector3 spawnPoint = transform.position + new Vector3(point.x, antSpawnHeight, point.y);
 
         Ant ant = Instantiate<Ant>(antPrefab);
         ant.transform.position = spawnPoint;

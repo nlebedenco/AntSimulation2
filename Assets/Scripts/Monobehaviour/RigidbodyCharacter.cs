@@ -13,29 +13,14 @@ public class RigidbodyCharacter: MonoBehaviour, ICharacter
     public float groundSpeed;
 #endif
 
-    public float jumpForce = 50.0f;
-    public ForceMode jumpForceMode = ForceMode.VelocityChange;
-
-    public float gravity = 200f;
-
     public bool turnToDirectionOfMovement = true;
     public float turnSpeed = 540f;
 
-    public float groundCheckRadius = 0.51f;
-    public string groundLayer = "Ground";
-
-    private Rigidbody rb;
+    protected Rigidbody rb;
 
     private Vector3 desiredDirection = Vector3.zero;
-    private bool desiredJump = false;
-
-    private int groundLayerMask;
 
     #region ICharacter 
-
-    public bool isGrounded { get; private set; }
-    public bool isJumping { get; private set; }
-    public bool isLanding { get; private set; }
 
     public void Stop()
     {
@@ -52,11 +37,6 @@ public class RigidbodyCharacter: MonoBehaviour, ICharacter
         this.desiredDirection = (rotation * this.desiredDirection).normalized;
     }
 
-    public void Jump()
-    {
-        this.desiredJump = true;
-    }
-
     #endregion
 
     #region Unity Events 
@@ -65,41 +45,18 @@ public class RigidbodyCharacter: MonoBehaviour, ICharacter
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
-        rb.useGravity = false;
-
-        groundLayerMask = LayerMask.GetMask(groundLayer);
     }
+
 
     protected virtual void FixedUpdate()
     {
-        isGrounded = Physics.CheckSphere(transform.position, groundCheckRadius, groundLayerMask);
-        isLanding = false;
-
-        if (isGrounded)
-        {
-            rb.AddForce(desiredDirection * moveForce, moveForceMode);
-            rb.velocity *= Mathf.Clamp01(1f - (moveDrag * Time.deltaTime));  // Apply ground drag before jump
-
-            if (isJumping)
-            {
-                isJumping = false;
-                isLanding = true;
-            }
-            else if (desiredJump)
-            {
-                rb.AddForce(transform.up * jumpForce, jumpForceMode);
-                isJumping = true;
-            }
-        }
-        else
-        {
-            rb.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
-        }
-
-        desiredJump = false;
+        rb.AddForce(desiredDirection * moveForce, moveForceMode);
+        rb.velocity *= Mathf.Clamp01(1f - (moveDrag * Time.deltaTime));
 
 #if UNITY_EDITOR
-        groundSpeed = rb.velocity.magnitude;
+        Vector3 grounVelocity = rb.velocity;
+        grounVelocity.y = 0;
+        groundSpeed = grounVelocity.magnitude;
 #endif
 
         if (turnToDirectionOfMovement)

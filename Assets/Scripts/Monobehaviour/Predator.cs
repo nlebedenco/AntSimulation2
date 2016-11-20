@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(ICharacter))]
+[RequireComponent(typeof(IPredatorCharacter))]
 [RequireComponent(typeof(ViewportShake))]
 public class Predator: MonoBehaviour
 {
@@ -9,14 +9,14 @@ public class Predator: MonoBehaviour
     public float cameraShakeIntensity = 0.0025f;
     public float cameraShakeDuration = 0.1f;
 
-    private ICharacter character;
+    private IPredatorCharacter character;
     private ViewportShake cameraShake;
 
     #region Unity Events
 
     void Awake()
     {
-        character = GetComponent<ICharacter>();
+        character = GetComponent<IPredatorCharacter>();
         cameraShake = GetComponent<ViewportShake>();
     }
 

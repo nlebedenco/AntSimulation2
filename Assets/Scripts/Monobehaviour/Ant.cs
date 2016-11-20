@@ -12,9 +12,6 @@ public class Ant: MonoBehaviour
     [ReadOnly]
     public float maxTurningAngle = 90f;
 
-    [ReadOnly]
-    public float chanceToJump = 0.001f;
-
     IAntCharacter character;
     AntAgentErratic agent;
 
@@ -23,12 +20,11 @@ public class Ant: MonoBehaviour
     void Awake()
     {
         character = GetComponent<IAntCharacter>();
-        agent = new AntAgentErratic(character, chanceToJump, chanceToTurn, maxTurningAngle);
+        agent = new AntAgentErratic(character, chanceToTurn, maxTurningAngle);
     }
 
     void Update()
     {
-        agent.chanceToJump = chanceToJump;
         agent.chanceToTurn = chanceToTurn;
         agent.maxTurningAngle = maxTurningAngle;
     }

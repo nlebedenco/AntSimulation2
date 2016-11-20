@@ -18,9 +18,9 @@ public class AntCharacter : RigidbodyCharacter, IAntCharacter
 
     protected override void FixedUpdate()
     {
-        base.FixedUpdate();
-
         OnUpdated();
+
+        base.FixedUpdate();
     }
 
     #endregion

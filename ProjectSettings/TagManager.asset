@@ -8,6 +8,7 @@ TagManager:
   - Predator
   - Food
   - Nest
+  - Ground
   layers:
   - Default
   - TransparentFX
