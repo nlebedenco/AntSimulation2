@@ -2,43 +2,40 @@
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(CameraShake))]
-public class RigidbodyMovement: MonoBehaviour, ICharacterMovement
+public class RigidbodyCharacter: MonoBehaviour, ICharacter
 {
-    public bool enableCameraShakeOnLanding = false;
-    public float cameraShakeIntensity = 0.0025f;
-    public float cameraShakeDuration = 0.1f;
-
-    public float moveForce = 20.0f;
+    public float moveForce = 10.0f;
     public ForceMode moveForceMode = ForceMode.VelocityChange;
-    public float moveDrag = 16.65f;
+    public float moveDrag = 16.3f;
 
 #if UNITY_EDITOR
     [ReadOnly(RunMode.Any)]
     public float groundSpeed;
 #endif
 
-    public float jumpForce = 70.0f;
-    public ForceMode jumpForceMode = ForceMode.Impulse;
+    public float jumpForce = 50.0f;
+    public ForceMode jumpForceMode = ForceMode.VelocityChange;
 
-    public float gravity = 100f;
+    public float gravity = 200f;
 
     public bool turnToDirectionOfMovement = true;
     public float turnSpeed = 540f;
 
-    public float groundCheckRadius = 0.5f;
+    public float groundCheckRadius = 0.51f;
     public string groundLayer = "Ground";
 
-    public bool isGrounded { get; private set; }
-    private bool isJumping = false;
-
     private Rigidbody rb;
-    private CameraShake cameraShake;
 
     private Vector3 desiredDirection = Vector3.zero;
     private bool desiredJump = false;
 
     private int groundLayerMask;
+
+    #region ICharacter 
+
+    public bool isGrounded { get; private set; }
+    public bool isJumping { get; private set; }
+    public bool isLanding { get; private set; }
 
     public void Stop()
     {
@@ -50,43 +47,45 @@ public class RigidbodyMovement: MonoBehaviour, ICharacterMovement
         this.desiredDirection = direction;
     }
 
+    public void Turn(Quaternion rotation)
+    {
+        this.desiredDirection = (rotation * this.desiredDirection).normalized;
+    }
+
     public void Jump()
     {
         this.desiredJump = true;
     }
 
+    #endregion
+
     #region Unity Events 
 
-    void Awake()
+    protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         rb.useGravity = false;
 
-        cameraShake = GetComponent<CameraShake>();
-
         groundLayerMask = LayerMask.GetMask(groundLayer);
     }
 
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         isGrounded = Physics.CheckSphere(transform.position, groundCheckRadius, groundLayerMask);
+        isLanding = false;
 
         if (isGrounded)
         {
+            rb.AddForce(desiredDirection * moveForce, moveForceMode);
+            rb.velocity *= Mathf.Clamp01(1f - (moveDrag * Time.deltaTime));  // Apply ground drag before jump
+
             if (isJumping)
             {
                 isJumping = false;
-                if (enableCameraShakeOnLanding)
-                {
-                    cameraShake.Shake(cameraShakeIntensity, cameraShakeDuration);
-                }
+                isLanding = true;
             }
-
-            rb.AddForce(desiredDirection * moveForce, moveForceMode);
-            rb.velocity *= Mathf.Clamp01(1f - (moveDrag * Time.deltaTime));  // Apply ground move drag before jump
-
-            if (desiredJump)
+            else if (desiredJump)
             {
                 rb.AddForce(transform.up * jumpForce, jumpForceMode);
                 isJumping = true;
@@ -111,7 +110,6 @@ public class RigidbodyMovement: MonoBehaviour, ICharacterMovement
                 float angle = Quaternion.Angle(rb.rotation, targetRotation);
                 float timeToComplete = angle / turnSpeed;
                 float ratio = Mathf.Min(1, Time.deltaTime / timeToComplete);
-                Quaternion deltaRotation = Quaternion.AngleAxis(angle * turnSpeed * Time.deltaTime, transform.up);
 
                 rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, ratio));
             }

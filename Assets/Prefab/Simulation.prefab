@@ -63,10 +63,9 @@ MonoBehaviour:
   minNestSpawnRadius: 50
   maxNestSpawnRadius: 100
   numberOfSpawnedNests: 0
-  pheromoneGridWidth: 2000
-  pheromoneGridHeight: 2000
-  pheromoneGridScale: 1
-  antsCanCommunicateFear: 1
+  pheromoneGridWidth: 100
+  pheromoneGridHeight: 100
+  pheromoneGridSquareSize: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

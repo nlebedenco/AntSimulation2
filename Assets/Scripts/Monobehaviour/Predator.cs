@@ -1,18 +1,33 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(ICharacterMovement))]
+[RequireComponent(typeof(ICharacter))]
+[RequireComponent(typeof(ViewportShake))]
 public class Predator: MonoBehaviour
 {
-    private ICharacterMovement character;
+    public bool enableCameraShakeOnLanding = false;
+    public float cameraShakeIntensity = 0.0025f;
+    public float cameraShakeDuration = 0.1f;
+
+    private ICharacter character;
+    private ViewportShake cameraShake;
 
     #region Unity Events
 
     void Awake()
     {
-        character = GetComponent<ICharacterMovement>();
+        character = GetComponent<ICharacter>();
+        cameraShake = GetComponent<ViewportShake>();
     }
-	
+
+    void FixedUpdate()
+    {
+        if (character.isLanding && enableCameraShakeOnLanding)
+        {
+            cameraShake.Shake(cameraShakeIntensity, cameraShakeDuration);
+        }
+    }
+
 	void Update()
     {
         if (character.isGrounded)
@@ -23,7 +38,9 @@ public class Predator: MonoBehaviour
             character.Move(direction.normalized);
 
             if (Input.GetButton("Jump"))
+            {
                 character.Jump();
+            }
         }
     }
 

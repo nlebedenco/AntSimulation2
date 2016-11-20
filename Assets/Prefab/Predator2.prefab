@@ -94,6 +94,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf6c9f808216a9940a08f7a75b0fd93b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableCameraShakeOnLanding: 1
+  cameraShakeIntensity: 0.0025
+  cameraShakeDuration: 0.1
 --- !u!114 &11423866
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -105,9 +108,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e42e9694c4a76d4c97d2035816bf918, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableCameraShakeOnLanding: 1
-  cameraShakeIntensity: 0.0025
-  cameraShakeDuration: 0.1
   moveForce: 10
   moveForceMode: 2
   moveDrag: 16.3
@@ -117,7 +117,7 @@ MonoBehaviour:
   gravity: 200
   turnToDirectionOfMovement: 1
   turnSpeed: 540
-  groundCheckRadius: 1
+  groundCheckRadius: 1.01
   groundLayer: Ground
 --- !u!114 &11469992
 MonoBehaviour:

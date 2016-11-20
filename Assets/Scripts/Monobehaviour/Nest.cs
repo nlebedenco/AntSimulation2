@@ -60,14 +60,14 @@ public class Nest : MonoBehaviour
     void Update()
     {
         // Update Fear Transfer
-        if (canTransferFear != fearTransferEnabled)
-        {
-            // Propagate Fear Transfer Settings
-            for (int i = 0; i < ants.Count; ++i)
-                ants[i].isFearContagious = fearTransferEnabled;
-
-            canTransferFear = fearTransferEnabled;
-        }
+        // if (canTransferFear != fearTransferEnabled)
+        // {
+        //     // Propagate Fear Transfer Settings
+        //     for (int i = 0; i < ants.Count; ++i)
+        //         ants[i].isFearContagious = fearTransferEnabled;
+        // 
+        //     canTransferFear = fearTransferEnabled;
+        // }
 
         // Update Ant Spawn
         if (canSpawnAnts != antSpawnEnabled)
@@ -107,7 +107,7 @@ public class Nest : MonoBehaviour
 
         Ant ant = Instantiate<Ant>(antPrefab);
         ant.transform.position = spawnPoint;
-        ant.isFearContagious = canTransferFear;
+        // ant.isFearContagious = canTransferFear;
         return ant;
     }
 }

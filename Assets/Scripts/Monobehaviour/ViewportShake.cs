@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-public class CameraShake : MonoBehaviour
+
+public class ViewportShake : MonoBehaviour
 {
     private float intensity;
     private float duration;

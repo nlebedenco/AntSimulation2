@@ -6,11 +6,11 @@ public class Simulation : MonoBehaviour
 {
     #region Static 
 
-    public static Simulation Instance { get; private set; }
+    private static Simulation instance;
 
     #endregion
 
-    [ReadOnly]
+[ReadOnly]
     public Nest nestPrefab;
 
     [ReadOnly]
@@ -65,7 +65,6 @@ public class Simulation : MonoBehaviour
         nestSpawnEnabled = true;
     }
 
-
     private Predator CreatePredator()
     {
         Predator predator = Instantiate<Predator>(predatorPrefab);
@@ -88,9 +87,9 @@ public class Simulation : MonoBehaviour
 
     void Awake()
     {
-        if  (Simulation.Instance == null)
+        if  (Simulation.instance == null)
         {
-            Simulation.Instance = this;
+            Simulation.instance = this;
 
             pheromoneGrid = new Pheromone[pheromoneGridWidth, pheromoneGridHeight];
 

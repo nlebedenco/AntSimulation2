@@ -5,6 +5,14 @@ public class Pheromone
 {
     const float e = 2.7182818284590451f;
 
+    public Pheromone(Vector3 position, float strength, float decay = 0.05f)
+    {
+        this.position = position;
+        this.startTime = Time.time;
+        this.strength = strength;
+        this.decay = decay;
+    }
+    
     private Vector3 position;
     private float startTime;
     private float strength;
@@ -29,11 +37,14 @@ public class Pheromone
             this.strength += strength;
     }
 
-    public Pheromone(Vector3 position, float strength, float decay = 0.05f)
+    public float Attraction(float distance, float limit = 0)
     {
-        this.position = position;
-        this.startTime = Time.time;
-        this.strength = strength;
-        this.decay = decay;
+        return (limit > 0 && distance > limit) ? 0 
+            : Strength / (distance * distance);
+    }
+
+    public float Attraction(Vector3 to, float limit = 0)
+    {
+        return Attraction(Vector3.Distance(to, Position), limit);
     }
 }

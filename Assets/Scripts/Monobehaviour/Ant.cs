@@ -1,73 +1,38 @@
 ﻿using UnityEngine;
+
+using System;
 using System.Collections;
 
-[RequireComponent(typeof(ICharacterMovement))]
-public class Ant : MonoBehaviour
+[RequireComponent(typeof(IAntCharacter))]
+public class Ant: MonoBehaviour
 {
-    [ReadOnly]
-    public float walkSpeedFactor = 1f;
-
-    [ReadOnly]
-    public float runSpeedFactor = 2f;
-
     [ReadOnly]
     public float chanceToTurn = 0.25f;
 
     [ReadOnly]
-    public float minTurnAngle = -180f;
-
-    [ReadOnly]
-    public float maxTurnAngle = 180f;
+    public float maxTurningAngle = 90f;
 
     [ReadOnly]
     public float chanceToJump = 0.001f;
 
-    [ReadOnly]
-    public float fearStrength = 1f;
-
-    [ReadOnly]
-    public float fearDecay = 0.05f;
-
-    public bool isFearContagious = true;
-
-    [ReadOnly(RunMode.Any)]
-    public float fear = 0;
-
-    ICharacterMovement character;
+    IAntCharacter character;
+    // AntAgentErratic agent;
+    Agent agent;
 
     #region Unity Events
 
     void Awake()
     {
-        character = GetComponent<ICharacterMovement>();
-    }
-
-    Vector3 moveDirection;
-
-    void Start()
-    {
-        moveDirection = transform.forward;
+        character = GetComponent<IAntCharacter>();
+        // agent = new AntAgentErratic(character, chanceToJump, chanceToTurn, maxTurningAngle);
+        agent = new AntAgentStatic(character);
     }
 
     void Update()
     {
-       
-    }
-
-    void FixedUpdate()
-    {
-        if (Random.value < chanceToTurn)
-        {
-            Quaternion rotation = Quaternion.AngleAxis(Random.Range(minTurnAngle, maxTurnAngle), Vector3.up);
-            moveDirection = rotation * moveDirection;
-        }
-
-        if (Random.value < chanceToJump)
-        {
-            character.Jump();
-        }
-
-        character.Move(moveDirection);
+        // agent.chanceToJump = chanceToJump;
+        // agent.chanceToTurn = chanceToTurn;
+        // agent.maxTurningAngle = maxTurningAngle;
     }
 
     #endregion
