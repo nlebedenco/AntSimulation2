@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ea9669046f3a244d9688a2c41013db5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveForce: 20
+  moveForce: 15
   moveForceMode: 2
   moveDrag: 16.65
   groundSpeed: 0
@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chanceToTurn: 0.25
-  maxTurningAngle: 180
+  maxTurningAngle: 127
   chanceToJump: 0.001
 --- !u!135 &13539180
 SphereCollider:

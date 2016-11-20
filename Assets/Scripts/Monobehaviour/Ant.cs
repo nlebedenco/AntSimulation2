@@ -16,23 +16,21 @@ public class Ant: MonoBehaviour
     public float chanceToJump = 0.001f;
 
     IAntCharacter character;
-    // AntAgentErratic agent;
-    Agent agent;
+    AntAgentErratic agent;
 
     #region Unity Events
 
     void Awake()
     {
         character = GetComponent<IAntCharacter>();
-        // agent = new AntAgentErratic(character, chanceToJump, chanceToTurn, maxTurningAngle);
-        agent = new AntAgentStatic(character);
+        agent = new AntAgentErratic(character, chanceToJump, chanceToTurn, maxTurningAngle);
     }
 
     void Update()
     {
-        // agent.chanceToJump = chanceToJump;
-        // agent.chanceToTurn = chanceToTurn;
-        // agent.maxTurningAngle = maxTurningAngle;
+        agent.chanceToJump = chanceToJump;
+        agent.chanceToTurn = chanceToTurn;
+        agent.maxTurningAngle = maxTurningAngle;
     }
 
     #endregion
