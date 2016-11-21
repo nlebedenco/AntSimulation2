@@ -9,13 +9,13 @@ GameObject:
   m_Component:
   - 4: {fileID: 495406}
   - 114: {fileID: 11402024}
-  - 114: {fileID: 11469992}
   - 114: {fileID: 11406206}
+  - 114: {fileID: 11469992}
   - 33: {fileID: 3394934}
   - 23: {fileID: 2371648}
   - 135: {fileID: 13500242}
   - 54: {fileID: 5495210}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Predator
   m_TagString: Predator
   m_Icon: {fileID: 0}
@@ -111,13 +111,17 @@ MonoBehaviour:
   moveForce: 600
   moveForceMode: 0
   moveDrag: 5.381
+  groundVelocity: {x: 0, y: 0, z: 0}
   groundSpeed: 0
   turnToDirectionOfMovement: 1
   turnSpeed: 540
-  jumpForce: 200
+  jumpForce: 250
   jumpForceMode: 1
+  enableMoveWhileJumping: 1
+  moveForceModifierWhileJumping: 0.5
+  moveDragModifierWhileJumping: 0.5
   groundCheckRadius: 2.51
-  groundLayer: Ground
+  groundLayerName: Ground
 --- !u!114 &11469992
 MonoBehaviour:
   m_ObjectHideFlags: 1

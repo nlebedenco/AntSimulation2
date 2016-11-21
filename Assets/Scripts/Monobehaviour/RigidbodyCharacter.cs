@@ -52,7 +52,8 @@ public class RigidbodyCharacter: MonoBehaviour, ICharacter
     protected virtual void FixedUpdate()
     {
         rb.AddForce(desiredDirection * moveForce, moveForceMode);
-        rb.velocity *= Mathf.Clamp01(1f - (moveDrag * Time.deltaTime));
+        float dragFactor = Mathf.Clamp01(1f - (moveDrag * Time.deltaTime));
+        rb.velocity = new Vector3(rb.velocity.x * dragFactor, rb.velocity.y, rb.velocity.z * dragFactor);
 
 #if UNITY_EDITOR
         groundVelocity = rb.velocity;

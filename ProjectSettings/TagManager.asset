@@ -19,8 +19,10 @@ TagManager:
   - 
   - 
   - Ground
-  - Predator
   - Ant
+  - Predator
+  - Nest
+  - Food
   - 
   - 
   - 
@@ -28,12 +30,10 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - SensitiveToAnt
+  - SensitiveToPredator
+  - SensitiveToNest
+  - SensitiveToFood
   - 
   - 
   - 

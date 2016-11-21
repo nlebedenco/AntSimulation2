@@ -41,33 +41,28 @@ public class AntAgentScareable<TCharacter> : Agent<TCharacter, AntAgentScareable
         public override void OnEnter()
         {
             agent.MoveForward();
+            // agent.Stop();
         }
 
         public override void OnExit() { }
 
         public override IAgentState OnUpdate()
         {
-            if (agent.threats.Count > 0)
-            {
-                return new Scared(agent);
-            }
-            else
-            {
-                agent.TurnAtRandom();
-                return this;
-            }
+            agent.TurnAtRandom();
+            return this;
         }
 
         public override IAgentState OnPredatorFound(Predator predator)
         {
             agent.threats.Add(predator.transform);
-            return this;
+            return new Scared(agent);
         }
 
         public override IAgentState OnPredatorLost(Predator predator)
         {
             agent.threats.Remove(predator.transform);
             return this;
+
         }
     }
 
@@ -77,7 +72,7 @@ public class AntAgentScareable<TCharacter> : Agent<TCharacter, AntAgentScareable
 
         public override void OnEnter()
         {
-            agent.Stop();
+            // agent.Stop();
         }
 
         public override void OnExit() { }
@@ -90,6 +85,7 @@ public class AntAgentScareable<TCharacter> : Agent<TCharacter, AntAgentScareable
             for (int i = 0; i < threats.Count; ++i)
                 escapeDirection += (position - threats[i].transform.position);
 
+            escapeDirection.y = 0;
             agent.Move(escapeDirection.normalized);
 
             return this;
@@ -104,6 +100,8 @@ public class AntAgentScareable<TCharacter> : Agent<TCharacter, AntAgentScareable
         public override IAgentState OnPredatorLost(Predator predator)
         {
             agent.threats.Remove(predator.transform);
+            if (agent.threats.Count == 0)
+                return new Safe(agent);
             return this;
         }
     }

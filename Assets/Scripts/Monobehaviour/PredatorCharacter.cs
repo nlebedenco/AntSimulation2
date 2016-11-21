@@ -5,8 +5,15 @@ public class PredatorCharacter : RigidbodyCharacter, IPredatorCharacter
 {
     public float jumpForce = 50.0f;
     public ForceMode jumpForceMode = ForceMode.VelocityChange;
+
+    public bool enableMoveWhileJumping = true;
+    public float moveForceModifierWhileJumping = 0.5f;
+    public float moveDragModifierWhileJumping = 0.5f;
+
     public float groundCheckRadius = 0.51f;
-    public string groundLayer = "Ground";
+
+    [ReadOnly]
+    public string groundLayerName = "Ground";
 
     private int groundLayerMask;
     private bool desiredJump = false;
@@ -30,7 +37,7 @@ public class PredatorCharacter : RigidbodyCharacter, IPredatorCharacter
     {
         base.Awake();
 
-        groundLayerMask = LayerMask.GetMask(groundLayer);
+        groundLayerMask = LayerMask.GetMask(groundLayerName);
     }
 
 
@@ -52,6 +59,22 @@ public class PredatorCharacter : RigidbodyCharacter, IPredatorCharacter
             {
                 rb.AddForce(transform.up * jumpForce, jumpForceMode);
                 isJumping = true;
+            }
+        }
+        else
+        {
+            if (isJumping)
+            {
+                var oldForce = moveForce;
+                var oldDrag = moveDrag;
+
+                moveForce *= moveForceModifierWhileJumping;
+                moveDrag *= moveDragModifierWhileJumping;
+
+                base.FixedUpdate();
+
+                moveForce = oldForce;
+                moveDrag = oldDrag;
             }
         }
 

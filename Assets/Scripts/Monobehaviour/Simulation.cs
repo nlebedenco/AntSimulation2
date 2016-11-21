@@ -10,7 +10,7 @@ public class Simulation : MonoBehaviour
 
     #endregion
 
-[ReadOnly]
+    [ReadOnly]
     public Nest nestPrefab;
 
     [ReadOnly]
@@ -22,26 +22,41 @@ public class Simulation : MonoBehaviour
     [ReadOnly]
     public float startDelay = 1f;
 
-    [ReadOnly]
-    public bool nestSpawnEnabled = false;
-    private bool canSpawnNests = false;
+    [Header("Nests")]
 
-    [ReadOnly]
+    public bool nestSpawnEnabled = false;
+
     public int maxNumberOfNests = 1;
 
-    [ReadOnly]
     public float nestSpawnRate = 0.25f;
 
-    [ReadOnly]
     public float minNestSpawnRadius = 50;
 
-    [ReadOnly]
     public float maxNestSpawnRadius = 100;
 
 #if UNITY_EDITOR
     [ReadOnly(RunMode.Any)]
     public int currentNumberOfNests;
 #endif
+
+    [Header("Food Sources")]
+
+    public bool foodSpawnEnabled = false;
+
+    public int maxNumberOfFoodSources = 1;
+
+    public float foodSpawnRate = 0.25f;
+
+    public float minFoodSpawnRadius = 10;
+
+    public float maxFoodSpawnRadius = 800;
+
+#if UNITY_EDITOR
+    [ReadOnly(RunMode.Any)]
+    public int currentNumberOfFoodSources;
+#endif
+
+    [Header("Pheromone Grid")]
 
     [ReadOnly]
     public uint pheromoneGridWidth = 100;
@@ -54,12 +69,14 @@ public class Simulation : MonoBehaviour
 
     private List<Predator> predators = new List<Predator>();
     private List<Nest> nests = new List<Nest>();
+    private List<Food> foodSources = new List<Food>();
 
     private Pheromone[,] pheromoneGrid;     // initialized on Awake()
+
     private float nestSpawnDeltaTime;
+    private float foodSpawnDeltaTime;
 
     private bool started = false;
-
 
     private IEnumerator DelayedStart()
     {
@@ -86,6 +103,17 @@ public class Simulation : MonoBehaviour
         return nest;
     }
 
+    private Food CreateFood()
+    {
+        float spawnDistance = Random.Range(minFoodSpawnRadius, maxFoodSpawnRadius);
+        Vector2 point = (Random.insideUnitCircle.normalized) * spawnDistance;
+        Vector3 spawnPoint = transform.position + new Vector3(point.x, 0, point.y);
+
+        Food food = Instantiate<Food>(foodPrefab);
+        food.transform.position = spawnPoint;
+        return food;
+    }
+
     #region Unity Events
 
     void Awake()
@@ -96,10 +124,6 @@ public class Simulation : MonoBehaviour
 
             UnityEngine.Random.seed = System.Environment.TickCount;
             pheromoneGrid = new Pheromone[pheromoneGridWidth, pheromoneGridHeight];
-
-            // TODO: Spawn Nests
-            // TODO: Spawn Food Sources
-            // TODO: Spawn Predators
         }
         else
         {
@@ -118,33 +142,60 @@ public class Simulation : MonoBehaviour
     {
         if (started)
         {
-            if (canSpawnNests != nestSpawnEnabled)
-            {
-                if (nestSpawnEnabled)
-                    nestSpawnDeltaTime = 0;
-
-                canSpawnNests = nestSpawnEnabled;
-            }
-
-            if (canSpawnNests)
-            {
-                nestSpawnDeltaTime += Time.deltaTime;
-                float spawnPeriod = 1f / nestSpawnRate;
-                while (nests.Count < maxNumberOfNests && nestSpawnDeltaTime >= spawnPeriod)
-                {
-                    Nest nest = CreateNest();
-                    nests.Add(nest);
-
-                    #if UNITY_EDITOR
-                    currentNumberOfNests = nests.Count;
-                    #endif
-
-                    nestSpawnDeltaTime -= spawnPeriod;
-                }
-            }
+            SpawnNest();
+            SpawnFood();
+            
         }
     }
 
     #endregion
+
+    private void SpawnNest()
+    {
+        if (nestSpawnEnabled)
+        {
+            nestSpawnDeltaTime += Time.deltaTime;
+            float spawnPeriod = 1f / nestSpawnRate;
+            while (nests.Count < maxNumberOfNests && nestSpawnDeltaTime >= spawnPeriod)
+            {
+                Nest nest = CreateNest();
+                nests.Add(nest);
+
+                #if UNITY_EDITOR
+                currentNumberOfNests = nests.Count;
+                #endif
+
+                nestSpawnDeltaTime -= spawnPeriod;
+            }
+        }
+        else
+        {
+            nestSpawnDeltaTime = 0;
+        }
+    }
+
+    private void SpawnFood()
+    {
+        if (foodSpawnEnabled)
+        {
+            foodSpawnDeltaTime += Time.deltaTime;
+            float spawnPeriod = 1f / foodSpawnRate;
+            while (foodSources.Count < maxNumberOfFoodSources && foodSpawnDeltaTime >= spawnPeriod)
+            {
+                Food food = CreateFood();
+                foodSources.Add(food);
+
+                #if UNITY_EDITOR
+                currentNumberOfFoodSources = foodSources.Count;
+                #endif
+
+                foodSpawnDeltaTime -= spawnPeriod;
+            }
+        }
+        else
+        {
+            foodSpawnDeltaTime = 0;
+        }
+    }
 
 }

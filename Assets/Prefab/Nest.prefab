@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 422110}
   - 33: {fileID: 3370326}
   - 23: {fileID: 2324758}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,9 +27,9 @@ GameObject:
   - 4: {fileID: 406168}
   - 135: {fileID: 13583516}
   - 114: {fileID: 11467906}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Nest
-  m_TagString: Untagged
+  m_TagString: Nest
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42,7 +42,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 477208}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Pilar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pilar: {fileID: 477208}
   pilarSpeed: 40
-  antPrefab: {fileID: 11410002, guid: db35b5774c69bdc4282b6b038fd21168, type: 2}
+  antPrefab: {fileID: 11403114, guid: db35b5774c69bdc4282b6b038fd21168, type: 2}
   autoEnableOnStart: 1
   autoEnableOnStartDelay: 3
   spawnEnabled: 0

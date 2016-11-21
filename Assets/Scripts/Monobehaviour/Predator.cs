@@ -30,18 +30,13 @@ public class Predator: MonoBehaviour
 
 	void Update()
     {
-        if (character.isGrounded)
-        {
-            Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-            direction = Camera.main.transform.TransformDirection(direction);
-            direction.y = 0;
-            character.Move(direction.normalized);
+        Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        direction = Camera.main.transform.TransformDirection(direction);
+        direction.y = 0;
+        character.Move(direction.normalized);
 
-            if (Input.GetButton("Jump"))
-            {
-                character.Jump();
-            }
-        }
+        if (Input.GetButton("Jump"))
+            character.Jump();
     }
 
     #endregion
