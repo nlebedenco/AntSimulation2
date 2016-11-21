@@ -40,7 +40,7 @@ public class Simulation : MonoBehaviour
 
 #if UNITY_EDITOR
     [ReadOnly(RunMode.Any)]
-    public int numberOfSpawnedNests;
+    public int currentNumberOfNests;
 #endif
 
     [ReadOnly]
@@ -58,11 +58,14 @@ public class Simulation : MonoBehaviour
     private Pheromone[,] pheromoneGrid;     // initialized on Awake()
     private float nestSpawnDeltaTime;
 
+    private bool started = false;
+
+
     private IEnumerator DelayedStart()
     {
         yield return new WaitForSeconds(startDelay);
         predators.Add(CreatePredator());
-        nestSpawnEnabled = true;
+        started = true;
     }
 
     private Predator CreatePredator()
@@ -113,28 +116,31 @@ public class Simulation : MonoBehaviour
 
     void Update()
     {
-        if (canSpawnNests != nestSpawnEnabled)
+        if (started)
         {
-            if (nestSpawnEnabled)
-                nestSpawnDeltaTime = 0;
-
-            canSpawnNests = nestSpawnEnabled;
-        }
-
-        if (canSpawnNests)
-        {
-            nestSpawnDeltaTime += Time.deltaTime;
-            float spawnPeriod = 1f / nestSpawnRate;
-            while (nests.Count < maxNumberOfNests && nestSpawnDeltaTime >= spawnPeriod)
+            if (canSpawnNests != nestSpawnEnabled)
             {
-                Nest nest = CreateNest();
-                nests.Add(nest);
+                if (nestSpawnEnabled)
+                    nestSpawnDeltaTime = 0;
 
-                #if UNITY_EDITOR
-                numberOfSpawnedNests = nests.Count;
-                #endif
+                canSpawnNests = nestSpawnEnabled;
+            }
 
-                nestSpawnDeltaTime -= spawnPeriod;
+            if (canSpawnNests)
+            {
+                nestSpawnDeltaTime += Time.deltaTime;
+                float spawnPeriod = 1f / nestSpawnRate;
+                while (nests.Count < maxNumberOfNests && nestSpawnDeltaTime >= spawnPeriod)
+                {
+                    Nest nest = CreateNest();
+                    nests.Add(nest);
+
+                    #if UNITY_EDITOR
+                    currentNumberOfNests = nests.Count;
+                    #endif
+
+                    nestSpawnDeltaTime -= spawnPeriod;
+                }
             }
         }
     }

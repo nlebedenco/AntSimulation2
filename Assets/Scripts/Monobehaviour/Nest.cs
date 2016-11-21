@@ -6,6 +6,12 @@ using System.Collections.Generic;
 public class Nest : MonoBehaviour
 {
     [ReadOnly]
+    public Transform pilar;
+
+    [ReadOnly]
+    public float pilarSpeed = 40f;
+
+    [ReadOnly]
     public Ant antPrefab;
 
     [ReadOnly]
@@ -15,45 +21,41 @@ public class Nest : MonoBehaviour
     public float autoEnableOnStartDelay = 3f;
 
     [ReadOnly]
-    public bool antSpawnEnabled = false;
-    private bool canSpawnAnts = false;
+    public bool spawnEnabled = false;
 
     [ReadOnlyRange(1, 1000)]
     public int maxNumberOfAnts = 100;
 
-    [ReadOnly]
-    public float antSpawnRate = 10f;
-    private float antSpawnDeltaTime = 0;
-
-    [ReadOnly]
-    public float antSpawnHeight = 2f;
-
-    [ReadOnly]
-    public float minAntSpawnRadius = 1;
-
-    [ReadOnly]
-    public float maxAntSpawnRadius = 5;
-
 #if UNITY_EDITOR
     [ReadOnly(RunMode.Any)]
-    public int numberOfSpawnedAnts;
+    public int currentNumberOfAnts;
 #endif
+
+    [ReadOnly]
+    public float spawnRate = 10f;
+
+    [ReadOnly]
+    public float minSpawnRadius = 1;
+
+    [ReadOnly]
+    public float maxSpawnRadius = 5;
+
+    [ReadOnly]
+    public float spawnHeight = 2f;
 
     // public bool fearTransferEnabled = false;
     // private bool canTransferFear = false;
 
-    private List<Ant> ants = new List<Ant>();    
-
-    private IEnumerator AutoEnableOnStart()
-    {
-        yield return new WaitForSeconds(autoEnableOnStartDelay);
-        antSpawnEnabled = true;
-    }
+    private bool canSpawn = false;
+    private float spawnDeltaTime = 0;
+    private List<Ant> ants = new List<Ant>();
 
     #region Unity Events
 
     void Start()
     {
+        StartCoroutine(ShowPilar());
+
         if (autoEnableOnStart)
         {
             StartCoroutine(AutoEnableOnStart());
@@ -73,27 +75,27 @@ public class Nest : MonoBehaviour
         // }
 
         // Update Ant Spawn
-        if (canSpawnAnts != antSpawnEnabled)
+        if (canSpawn != spawnEnabled)
         {
-            if (antSpawnEnabled)
-                antSpawnDeltaTime = 0;
+            if (spawnEnabled)
+                spawnDeltaTime = 0;
 
-            canSpawnAnts = antSpawnEnabled;
+            canSpawn = spawnEnabled;
         }
 
         // Spawn Ants according to configured spawn rate
-        if (canSpawnAnts)
+        if (canSpawn)
         {
-            antSpawnDeltaTime += Time.deltaTime;
-            float spawnPeriod = 1f / antSpawnRate;
-            while (ants.Count < maxNumberOfAnts && antSpawnDeltaTime >= spawnPeriod)
+            spawnDeltaTime += Time.deltaTime;
+            float spawnPeriod = 1f / spawnRate;
+            while (ants.Count < maxNumberOfAnts && spawnDeltaTime >= spawnPeriod)
             {
                 Ant ant = CreateAnt();
                 ants.Add(ant);
                 #if UNITY_EDITOR
-                numberOfSpawnedAnts = ants.Count;
+                currentNumberOfAnts = ants.Count;
                 #endif
-                antSpawnDeltaTime -= spawnPeriod;
+                spawnDeltaTime -= spawnPeriod;
             }
         }
 
@@ -102,14 +104,36 @@ public class Nest : MonoBehaviour
 
     #endregion
 
+    private IEnumerator AutoEnableOnStart()
+    {
+        yield return new WaitForSeconds(autoEnableOnStartDelay);
+        spawnEnabled = true;
+    }
+
+    private IEnumerator ShowPilar()
+    {
+        Vector3 position = pilar.position;
+        while (position.y < 0)
+        {
+            yield return new WaitForEndOfFrame();
+            position += new Vector3(0, pilarSpeed * Time.deltaTime, 0);
+            if (position.y > 0)
+                position.y = 0;
+            pilar.position = position;
+        }
+    }
+
     private Ant CreateAnt()
     {
-        float spawnDistance = Random.Range(minAntSpawnRadius, maxAntSpawnRadius);
+        Vector3 position = transform.position;
+
+        float spawnDistance = Random.Range(minSpawnRadius, maxSpawnRadius);
         Vector2 point = (Random.insideUnitCircle.normalized) * spawnDistance;
-        Vector3 spawnPoint = transform.position + new Vector3(point.x, antSpawnHeight, point.y);
+        Vector3 spawnPoint = position + new Vector3(point.x, spawnHeight, point.y);
 
         Ant ant = Instantiate<Ant>(antPrefab);
         ant.transform.position = spawnPoint;
+        ant.transform.LookAt(2 * spawnPoint - new Vector3(position.x, spawnPoint.y, position.z));
         // ant.isFearContagious = canTransferFear;
         return ant;
     }

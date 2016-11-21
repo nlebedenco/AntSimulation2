@@ -44,12 +44,12 @@ MonoBehaviour:
   foodPrefab: {fileID: 0}
   predatorPrefab: {fileID: 11402024, guid: 08093fe46b0a8ea479044f6bf2afb3ed, type: 2}
   startDelay: 1
-  nestSpawnEnabled: 0
+  nestSpawnEnabled: 1
   maxNumberOfNests: 1
   nestSpawnRate: 0.25
   minNestSpawnRadius: 0
   maxNestSpawnRadius: 100
-  numberOfSpawnedNests: 0
+  currentNumberOfNests: 0
   pheromoneGridWidth: 1000
   pheromoneGridHeight: 1000
   pheromoneGridSquareSize: 1

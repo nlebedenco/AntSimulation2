@@ -10,6 +10,8 @@ public class RigidbodyCharacter: MonoBehaviour, ICharacter
 
 #if UNITY_EDITOR
     [ReadOnly(RunMode.Any)]
+    public Vector3 groundVelocity;
+    [ReadOnly(RunMode.Any)]
     public float groundSpeed;
 #endif
 
@@ -47,16 +49,15 @@ public class RigidbodyCharacter: MonoBehaviour, ICharacter
         rb.freezeRotation = true;
     }
 
-
     protected virtual void FixedUpdate()
     {
         rb.AddForce(desiredDirection * moveForce, moveForceMode);
         rb.velocity *= Mathf.Clamp01(1f - (moveDrag * Time.deltaTime));
 
 #if UNITY_EDITOR
-        Vector3 grounVelocity = rb.velocity;
-        grounVelocity.y = 0;
-        groundSpeed = grounVelocity.magnitude;
+        groundVelocity = rb.velocity;
+        groundVelocity.y = 0;
+        groundSpeed = groundVelocity.magnitude;
 #endif
 
         if (turnToDirectionOfMovement)

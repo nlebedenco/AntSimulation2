@@ -7,8 +7,8 @@ public abstract class Agent
 
 public interface IState<TCharacter>
 {
-    void Enter(TCharacter character);
-    void Exit(TCharacter character);
+    void OnEnter();
+    void OnExit();
 }
 
 public abstract class Agent<TCharacter, TState> : Agent
@@ -16,13 +16,13 @@ public abstract class Agent<TCharacter, TState> : Agent
 {
     public Agent(TCharacter character)
     {
-        Character = character;
+        this.character = character;
     }
 
-    public TCharacter Character { get; protected set; }
+    public TCharacter character { get; protected set; }
 
     private TState _state;
-    public TState State
+    public TState state
     {
         get { return _state; }
         protected set
@@ -30,10 +30,10 @@ public abstract class Agent<TCharacter, TState> : Agent
             if (!value.Equals(_state))
             {
                 if (_state != null)
-                    _state.Exit(Character);
+                    _state.OnExit();
                 _state = value;
                 if (_state != null)
-                    _state.Enter(Character);
+                    _state.OnEnter();
             }
         }
     }

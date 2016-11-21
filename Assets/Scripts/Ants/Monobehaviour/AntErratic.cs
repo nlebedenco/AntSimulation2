@@ -1,10 +1,6 @@
 ﻿using UnityEngine;
 
-using System;
-using System.Collections;
-
-[RequireComponent(typeof(IAntCharacter))]
-public class Ant: MonoBehaviour
+public class AntErratic : Ant
 {
     [ReadOnly]
     public float chanceToTurn = 0.25f;
@@ -12,14 +8,14 @@ public class Ant: MonoBehaviour
     [ReadOnly]
     public float maxTurningAngle = 90f;
 
-    IAntCharacter character;
-    AntAgentErratic agent;
+    protected AntAgentErratic agent;
 
     #region Unity Events
 
-    void Awake()
+    protected override void Awake()
     {
-        character = GetComponent<IAntCharacter>();
+        base.Awake();
+
         agent = new AntAgentErratic(character, chanceToTurn, maxTurningAngle);
     }
 

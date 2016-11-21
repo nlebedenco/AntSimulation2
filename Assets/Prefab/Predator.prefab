@@ -108,14 +108,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a499a3474c8c38f4e89123ea71e2a836, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveForce: 20
-  moveForceMode: 2
-  moveDrag: 15.265
+  moveForce: 600
+  moveForceMode: 0
+  moveDrag: 5.381
   groundSpeed: 0
   turnToDirectionOfMovement: 1
   turnSpeed: 540
   jumpForce: 200
-  jumpForceMode: 2
+  jumpForceMode: 1
   groundCheckRadius: 2.51
   groundLayer: Ground
 --- !u!114 &11469992
