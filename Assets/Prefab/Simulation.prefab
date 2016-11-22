@@ -44,13 +44,13 @@ MonoBehaviour:
   foodPrefab: {fileID: 11484280, guid: da7818e9e54dd3f44976196a3c813492, type: 2}
   predatorPrefab: {fileID: 11402024, guid: 08093fe46b0a8ea479044f6bf2afb3ed, type: 2}
   startDelay: 1
-  nestSpawnEnabled: 1
+  nestSpawnEnabled: 0
   maxNumberOfNests: 1
   nestSpawnRate: 0.25
   minNestSpawnRadius: 0
   maxNestSpawnRadius: 100
   currentNumberOfNests: 0
-  foodSpawnEnabled: 1
+  foodSpawnEnabled: 0
   maxNumberOfFoodSources: 10
   foodSpawnRate: 0.06666667
   minFoodSpawnRadius: 10
