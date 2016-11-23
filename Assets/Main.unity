@@ -135,7 +135,7 @@ Prefab:
         type: 2}
     - target: {fileID: 168716, guid: c8c6530e4c220604bbdfc1818b9ee0b6, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c8c6530e4c220604bbdfc1818b9ee0b6, type: 2}
@@ -176,7 +176,7 @@ Transform:
   - {fileID: 685587928}
   - {fileID: 157097850}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
 --- !u!1 &554606387
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,7 +250,7 @@ GameObject:
   - 33: {fileID: 617629960}
   - 65: {fileID: 617629959}
   - 23: {fileID: 617629958}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Wall (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -326,7 +326,7 @@ GameObject:
   - 33: {fileID: 673137718}
   - 65: {fileID: 673137717}
   - 23: {fileID: 673137716}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Wall (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -432,7 +432,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 168716, guid: c8c6530e4c220604bbdfc1818b9ee0b6, type: 2}
       propertyPath: m_Name
-      value: Nest of Static Ants
+      value: Nest of Dead Ants
       objectReference: {fileID: 0}
     - target: {fileID: 11467906, guid: c8c6530e4c220604bbdfc1818b9ee0b6, type: 2}
       propertyPath: antPrefab
@@ -441,7 +441,7 @@ Prefab:
         type: 2}
     - target: {fileID: 168716, guid: c8c6530e4c220604bbdfc1818b9ee0b6, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c8c6530e4c220604bbdfc1818b9ee0b6, type: 2}
@@ -534,7 +534,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 168716, guid: c8c6530e4c220604bbdfc1818b9ee0b6, type: 2}
       propertyPath: m_Name
-      value: Nest of Straight Ants
+      value: Nest of Steady Ants
       objectReference: {fileID: 0}
     - target: {fileID: 11467906, guid: c8c6530e4c220604bbdfc1818b9ee0b6, type: 2}
       propertyPath: antPrefab
@@ -543,7 +543,7 @@ Prefab:
         type: 2}
     - target: {fileID: 168716, guid: c8c6530e4c220604bbdfc1818b9ee0b6, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11467906, guid: c8c6530e4c220604bbdfc1818b9ee0b6, type: 2}
       propertyPath: maxNumberOfAnts
@@ -630,7 +630,7 @@ GameObject:
   - 33: {fileID: 863151420}
   - 65: {fileID: 863151419}
   - 23: {fileID: 863151418}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Wall (0)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -749,7 +749,7 @@ Prefab:
         type: 2}
     - target: {fileID: 168716, guid: c8c6530e4c220604bbdfc1818b9ee0b6, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c8c6530e4c220604bbdfc1818b9ee0b6, type: 2}
@@ -765,7 +765,7 @@ GameObject:
   - 33: {fileID: 1024973824}
   - 65: {fileID: 1024973823}
   - 23: {fileID: 1024973822}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Wall (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -873,6 +873,10 @@ Prefab:
       propertyPath: m_Name
       value: GameMode
       objectReference: {fileID: 0}
+    - target: {fileID: 129300, guid: e9d82140f5b65354bbbf2a3dc4cdf542, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e9d82140f5b65354bbbf2a3dc4cdf542, type: 2}
   m_IsPrefabParent: 0
@@ -972,7 +976,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 446380, guid: c63d5a509ab126f46a6037fcd257591c, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c63d5a509ab126f46a6037fcd257591c, type: 2}
@@ -1072,4 +1076,4 @@ Transform:
   - {fileID: 617629957}
   - {fileID: 1024973821}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2

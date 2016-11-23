@@ -15,8 +15,8 @@ public class AntAgentScareable<TCharacter> : Agent<TCharacter, AntAgentScareable
         IAgentState OnUpdate();
         IAgentState OnPredatorFound(IPredatorCharacter predator);
         IAgentState OnPredatorLost(IPredatorCharacter predator);
-        IAgentState OnAntFound(AntAgentScareable ant);
-        IAgentState OnAntLost(AntAgentScareable ant);
+        IAgentState OnAntFound(IAntCharacter ant);
+        IAgentState OnAntLost(IAntCharacter ant);
     }
 
     #region States
@@ -32,11 +32,11 @@ public class AntAgentScareable<TCharacter> : Agent<TCharacter, AntAgentScareable
 
         public abstract void OnEnter();
         public abstract void OnExit();
-        public abstract IAgentState OnAntFound(AntAgentScareable ant);
-        public abstract IAgentState OnAntLost(AntAgentScareable ant);
+        public abstract IAgentState OnUpdate();
         public abstract IAgentState OnPredatorFound(IPredatorCharacter predator);
         public abstract IAgentState OnPredatorLost(IPredatorCharacter predator);
-        public abstract IAgentState OnUpdate();
+        public abstract IAgentState OnAntFound(IAntCharacter ant);
+        public abstract IAgentState OnAntLost(IAntCharacter ant);
     }
 
     private class Idle : AgentState
@@ -67,16 +67,19 @@ public class AntAgentScareable<TCharacter> : Agent<TCharacter, AntAgentScareable
             return this;
         }
 
-        public override IAgentState OnAntFound(AntAgentScareable ant)
+        public override IAgentState OnAntFound(IAntCharacter ant)
         {
-            agent.Communicate(ant);
-            if (agent.isScared)
-                return new Scared(agent);
-
+            AntAgentScareable scareable = ant.agent as AntAgentScareable;
+            if (scareable != null)
+            {
+                agent.Communicate(scareable);
+                if (agent.isScared)
+                    return new Scared(agent);
+            }
             return this;
         }
 
-        public override IAgentState OnAntLost(AntAgentScareable ant)
+        public override IAgentState OnAntLost(IAntCharacter ant)
         {
             return this;
         }
@@ -113,12 +116,12 @@ public class AntAgentScareable<TCharacter> : Agent<TCharacter, AntAgentScareable
             return this;
         }
 
-        public override IAgentState OnAntFound(AntAgentScareable ant)
+        public override IAgentState OnAntFound(IAntCharacter ant)
         {
             return this;
         }
 
-        public override IAgentState OnAntLost(AntAgentScareable ant)
+        public override IAgentState OnAntLost(IAntCharacter ant)
         {
             return this;
         }
@@ -161,12 +164,12 @@ public class AntAgentScareable<TCharacter> : Agent<TCharacter, AntAgentScareable
             return this;
         }
 
-        public override IAgentState OnAntFound(AntAgentScareable ant)
+        public override IAgentState OnAntFound(IAntCharacter ant)
         {
             return this;
         }
 
-        public override IAgentState OnAntLost(AntAgentScareable ant)
+        public override IAgentState OnAntLost(IAntCharacter ant)
         {
             return this;
         }
@@ -178,13 +181,13 @@ public class AntAgentScareable<TCharacter> : Agent<TCharacter, AntAgentScareable
 
         public override void OnEnter()
         {
-            agent.character.moveForce /= 2;
+            agent.character.moveForce /= 3;
             agent.MoveForward();
         }
 
         public override void OnExit()
         {
-            agent.character.moveForce *= 2;
+            agent.character.moveForce *= 3;
         }
 
         public override IAgentState OnUpdate()
@@ -205,12 +208,22 @@ public class AntAgentScareable<TCharacter> : Agent<TCharacter, AntAgentScareable
             return this;
         }
 
-        public override IAgentState OnAntFound(AntAgentScareable ant)
+        public override IAgentState OnAntFound(IAntCharacter ant)
         {
-            return new Idle(agent);
+            AntAgentScareable scareable = ant.agent as AntAgentScareable;
+            if (scareable != null)
+            {
+                agent.Communicate(scareable);
+                if (agent.isScared)
+                    return new Scared(agent);
+                else
+                    return new Idle(agent);
+            }
+
+            return this;
         }
 
-        public override IAgentState OnAntLost(AntAgentScareable ant)
+        public override IAgentState OnAntLost(IAntCharacter ant)
         {
             return this;
         }
@@ -239,11 +252,15 @@ public class AntAgentScareable<TCharacter> : Agent<TCharacter, AntAgentScareable
         this.threats = new List<Transform>();
     }
 
+    [Header("Random Movement")]
+
     public float chanceToTurn;
     public float maxTurningAngle;
+
+    [Header("Fear")]
+
     public float maxFear;
     public float fearDecayRate;
-
     public float fear { get; private set; }
 
     public List<Transform> threats { get; private set; }
@@ -324,16 +341,12 @@ public class AntAgentScareable<TCharacter> : Agent<TCharacter, AntAgentScareable
 
     private void character_AntFound(IAntCharacter ant)
     {
-        AntAgentScareable scareable = ant.agent as AntAgentScareable;
-        if (scareable != null)
-            state = state.OnAntFound(scareable);
+        state = state.OnAntFound(ant);
     }
 
     private void character_AntLost(IAntCharacter ant)
     {
-        AntAgentScareable scareable = ant.agent as AntAgentScareable;
-        if (scareable != null)
-            state = state.OnAntLost(scareable);
+        state = state.OnAntLost(ant);
     }
 
     #endregion

@@ -5,17 +5,27 @@ using System.Collections;
 
 public class AntCharacter : RigidbodyCharacter, IAntCharacter
 {
+    [Header("Predator Detection")]
+
     [Range(0, 10)]
     public float reactionTime = 0.1f;
 
     [ReadOnly]
-    public string predatorLayerName = "Predator";
+    public string predatorLayerName = "PredatorPresence";
+
+    [Header("Ant Detection")]
 
     [ReadOnly]
     public string antLayerName = "Ant";
 
+    [Header("Obstacle Detection")]
+
+    [ReadOnly]
+    public string obstacleLayerName = "Obstacle";
+
     protected int antLayer;
     protected int predatorLayer;
+    protected int obstacleLayer;
 
     #region IAntCharacter 
 
@@ -28,6 +38,8 @@ public class AntCharacter : RigidbodyCharacter, IAntCharacter
 
     public event Action<IAntCharacter> AntFound;
     public event Action<IAntCharacter> AntLost;
+
+    public event Action<Collider> Blocked;
 
     #endregion
 
@@ -66,21 +78,11 @@ public class AntCharacter : RigidbodyCharacter, IAntCharacter
             handler(ant);
     }
 
-    #region Unity Events 
-
-    protected override void Awake()
+    protected void OnBlocked(Collider obstacle)
     {
-        base.Awake();
-
-        predatorLayer = LayerMask.NameToLayer(predatorLayerName);
-        antLayer = LayerMask.NameToLayer(antLayerName);
-    }
-
-    protected override void FixedUpdate()
-    {
-        OnUpdated();
-
-        base.FixedUpdate();
+        var handler = Blocked;
+        if (handler != null)
+            handler(obstacle);
     }
 
     private IEnumerator DelayedPredatorFound(IPredatorCharacter predator)
@@ -139,28 +141,81 @@ public class AntCharacter : RigidbodyCharacter, IAntCharacter
             OnAntLost(ant);
     }
 
+    #region Unity Events 
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        predatorLayer = LayerMask.NameToLayer(predatorLayerName);
+        antLayer = LayerMask.NameToLayer(antLayerName);
+        obstacleLayer = LayerMask.NameToLayer(obstacleLayerName);
+    }
+
+    protected override void FixedUpdate()
+    {
+        if (obstacleHitCount > 4)
+        {
+            obstacleHitCount = 0;
+            OnBlocked(obstacle);
+        }
+
+        OnUpdated();
+
+        base.FixedUpdate();
+    }
+
+    private Collider obstacle;
+    private int obstacleHitCount;
+    private float obstacleLastSeen;
+
+    protected virtual void OnCollisionEnter(Collision collision)
+    {
+        var contact = collision.contacts[0];
+        // When you using normalized vectors, Dot product will return 1 if the collision point is exactly in the front, 
+        // 0 if it's in a 90° angle (left, right, up, down) and -1 if it's behind. 
+        float dot = Vector3.Dot(transform.forward, (contact.point - transform.position).normalized);
+        // Debug.LogFormat("{0} with {1}: {2}", contact.thisCollider.name, contact.otherCollider.name, dot);
+        if (dot > 0.75f)
+        {
+            if (contact.otherCollider != obstacle)
+            {
+                obstacle = contact.otherCollider;
+                obstacleHitCount = 0;
+                obstacleLastSeen = Time.time;
+            }
+            else
+            {
+                if (Time.time - obstacleLastSeen < 2)
+                    obstacleHitCount++;
+                else
+                    obstacleHitCount = 0;
+                obstacleLastSeen = Time.time;
+            }
+        }
+    }
+
     protected virtual void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == predatorLayer)
         {
-            ReactToPredatorFound(other.gameObject.GetComponent<IPredatorCharacter>());
+            ReactToPredatorFound(other.attachedRigidbody.GetComponent<IPredatorCharacter>());
         }
         else if (other.gameObject.layer == antLayer)
         {
-            ReactToAntFound(other.gameObject.GetComponent<IAntCharacter>());
+            ReactToAntFound(other.attachedRigidbody.GetComponent<IAntCharacter>());
         }
-
     }
 
     protected virtual void OnTriggerExit(Collider other)
     {
         if (other.gameObject.layer == predatorLayer)
         {
-            ReactToPredatorLost(other.gameObject.GetComponent<IPredatorCharacter>());
+            ReactToPredatorLost(other.attachedRigidbody.GetComponent<IPredatorCharacter>());
         }
         else if (other.gameObject.layer == antLayer)
         {
-            ReactToAntLost(other.gameObject.GetComponent<IAntCharacter>());
+            ReactToAntLost(other.attachedRigidbody.GetComponent<IAntCharacter>());
         }
     }
 

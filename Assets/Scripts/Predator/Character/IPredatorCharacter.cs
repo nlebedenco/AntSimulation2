@@ -11,4 +11,5 @@ public interface IPredatorCharacter : ICharacter
     bool isLanding { get; }
 
     void Jump();
+    void Stealth();
 }

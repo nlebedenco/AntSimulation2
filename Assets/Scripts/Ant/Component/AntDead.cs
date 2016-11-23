@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public class AntStraight: Ant
+public class AntDead: Ant
 {
-    protected AntAgentStraight agent;
+    protected AntAgentDead agent;
 
     #region Unity Events
 
@@ -10,7 +10,7 @@ public class AntStraight: Ant
     {
         base.Awake();
 
-        agent = new AntAgentStraight(character);
+        agent = new AntAgentDead(character);
         character.agent = agent;
     }
 

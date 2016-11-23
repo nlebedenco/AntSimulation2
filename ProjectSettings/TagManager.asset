@@ -23,21 +23,21 @@ TagManager:
   - Predator
   - Nest
   - Food
+  - Obstacle
+  - 
+  - AntPresence
+  - PredatorPresence
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - SensitiveToAntPresence
   - SensitiveToAnt
+  - SensitiveToPredatorPresence
   - SensitiveToPredator
+  - 
+  - 
   - SensitiveToNest
+  - 
   - SensitiveToFood
-  - 
-  - 
-  - 
-  - 
   - 
   - 
   - 

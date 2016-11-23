@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 418356}
   - 135: {fileID: 13555438}
   m_Layer: 20
-  m_Name: SensitiveToAnt
+  m_Name: SensitivityToAnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,7 +45,7 @@ GameObject:
   - 4: {fileID: 420604}
   - 135: {fileID: 13535444}
   m_Layer: 21
-  m_Name: SensitiveToPredator
+  m_Name: SensitivityToPredatorPresence
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -270,8 +270,9 @@ MonoBehaviour:
   turnToDirectionOfMovement: 1
   turnSpeed: 540
   reactionTime: 0.1
-  predatorLayerName: Predator
+  predatorLayerName: PredatorPresence
   antLayerName: Ant
+  obstacleLayerName: Obstacle
 --- !u!135 &13511872
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -306,7 +307,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 8
+  m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &100100000
 Prefab:

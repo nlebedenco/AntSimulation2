@@ -13,4 +13,6 @@ public interface IAntCharacter: ICharacter
 
     event Action<IAntCharacter> AntFound;
     event Action<IAntCharacter> AntLost;
+
+    event Action<Collider> Blocked;
 }

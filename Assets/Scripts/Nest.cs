@@ -43,9 +43,6 @@ public class Nest : MonoBehaviour
     [ReadOnly]
     public float spawnHeight = 2f;
 
-    // public bool fearTransferEnabled = false;
-    // private bool canTransferFear = false;
-
     private bool canSpawn = false;
     private float spawnDeltaTime = 0;
     private List<Ant> ants = new List<Ant>();
@@ -64,16 +61,6 @@ public class Nest : MonoBehaviour
 
     void Update()
     {
-        // Update Fear Transfer
-        // if (canTransferFear != fearTransferEnabled)
-        // {
-        //     // Propagate Fear Transfer Settings
-        //     for (int i = 0; i < ants.Count; ++i)
-        //         ants[i].isFearContagious = fearTransferEnabled;
-        // 
-        //     canTransferFear = fearTransferEnabled;
-        // }
-
         // Update Ant Spawn
         if (canSpawn != spawnEnabled)
         {
@@ -132,9 +119,9 @@ public class Nest : MonoBehaviour
         Vector3 spawnPoint = position + new Vector3(point.x, spawnHeight, point.y);
 
         Ant ant = Instantiate<Ant>(antPrefab);
+        ant.transform.parent = transform;
         ant.transform.position = spawnPoint;
         ant.transform.LookAt(2 * spawnPoint - new Vector3(position.x, spawnPoint.y, position.z));
-        // ant.isFearContagious = canTransferFear;
         return ant;
     }
 }

@@ -199,7 +199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ea9669046f3a244d9688a2c41013db5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveForce: 20
+  moveForce: 15
   moveForceMode: 0
   moveDrag: 20
   groundVelocity: {x: 0, y: 0, z: 0}
@@ -207,8 +207,9 @@ MonoBehaviour:
   turnToDirectionOfMovement: 1
   turnSpeed: 540
   reactionTime: 0.1
-  predatorLayerName: Predator
+  predatorLayerName: PredatorPresence
   antLayerName: Ant
+  obstacleLayerName: Obstacle
 --- !u!135 &13556520
 SphereCollider:
   m_ObjectHideFlags: 1

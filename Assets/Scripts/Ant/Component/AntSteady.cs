@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public class AntStatic: Ant
+public class AntSteady: Ant
 {
-    protected AntAgentStatic agent;
+    protected AntAgentSteady agent;
 
     #region Unity Events
 
@@ -10,7 +10,7 @@ public class AntStatic: Ant
     {
         base.Awake();
 
-        agent = new AntAgentStatic(character);
+        agent = new AntAgentSteady(character);
         character.agent = agent;
     }
 

@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 418356}
   - 135: {fileID: 13555438}
   m_Layer: 21
-  m_Name: AreaOfInterest
+  m_Name: SensitivityToPredatorPresence
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -235,7 +235,7 @@ MonoBehaviour:
   turnToDirectionOfMovement: 1
   turnSpeed: 540
   reactionTime: 0.1
-  predatorLayerName: Predator
+  predatorLayerName: PredatorPresence
   antLayerName: Ant
 --- !u!135 &13511872
 SphereCollider:

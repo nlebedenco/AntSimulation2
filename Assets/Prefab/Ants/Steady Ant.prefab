@@ -30,7 +30,7 @@ GameObject:
   - 135: {fileID: 13574444}
   - 54: {fileID: 5447768}
   m_Layer: 9
-  m_Name: Straight Ant
+  m_Name: Steady Ant
   m_TagString: Ant
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ea9669046f3a244d9688a2c41013db5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveForce: 20
+  moveForce: 15
   moveForceMode: 0
   moveDrag: 20
   groundVelocity: {x: 0, y: 0, z: 0}
@@ -194,8 +194,9 @@ MonoBehaviour:
   turnToDirectionOfMovement: 1
   turnSpeed: 540
   reactionTime: 0.1
-  predatorLayerName: Predator
+  predatorLayerName: PredatorPresence
   antLayerName: Ant
+  obstacleLayerName: Obstacle
 --- !u!114 &11457070
 MonoBehaviour:
   m_ObjectHideFlags: 1
