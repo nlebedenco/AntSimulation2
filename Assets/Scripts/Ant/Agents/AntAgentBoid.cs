@@ -91,7 +91,7 @@ public class AntAgentBoid<TCharacter> : Agent<TCharacter, AntAgentBoid<TCharacte
 
         public override void OnEnter()
         {
-            agent.CallToFollow(agent.FindEscapeDirection());
+            agent.CallToFollow(agent.FindEscapeDirection(), agent as AntAgentBoid);
         }
 
         public override void OnExit()
@@ -116,7 +116,7 @@ public class AntAgentBoid<TCharacter> : Agent<TCharacter, AntAgentBoid<TCharacte
         {
             agent.threats.Remove(predator.transform);
             if (agent.threats.Count == 0)
-                return new Regroup(agent);
+                return agent.friends.Count > 0 ? new Regroup(agent) as IAgentState : new Lost(agent) as IAgentState;
 
             return this;
         }
@@ -144,13 +144,13 @@ public class AntAgentBoid<TCharacter> : Agent<TCharacter, AntAgentBoid<TCharacte
 
         public override void OnEnter()
         {
-            agent.CallToFollow(agent.directionToFollow);
+            agent.CallToFollow(agent.directionToFollow, agent as AntAgentBoid);
             agent.Move(agent.directionToFollow);
         }
 
         public override void OnExit()
         {
-
+            agent.Rest();
         }
 
         public override IAgentState OnUpdate()
@@ -186,6 +186,9 @@ public class AntAgentBoid<TCharacter> : Agent<TCharacter, AntAgentBoid<TCharacte
             AntAgentBoid boid = ant.agent as AntAgentBoid;
             if (boid != null)
                 agent.friends.Remove(boid);
+
+            if (boid == agent.callerToFollow)
+                return new Regroup(agent);
 
             return agent.friends.Count > 0 ? this as IAgentState : new Lost(agent) as IAgentState;
         }
@@ -259,6 +262,7 @@ public class AntAgentBoid<TCharacter> : Agent<TCharacter, AntAgentBoid<TCharacte
 
         public override void OnEnter()
         {
+            Debug.Log("Enter Lost");
             agent.character.moveForce *= 2;
             agent.MoveForward();
         }
@@ -266,6 +270,7 @@ public class AntAgentBoid<TCharacter> : Agent<TCharacter, AntAgentBoid<TCharacte
         public override void OnExit()
         {
             agent.character.moveForce /= 2;
+            Debug.Log("Exit Lost");
         }
 
         public override IAgentState OnUpdate()
@@ -413,6 +418,7 @@ public class AntAgentBoid<TCharacter> : Agent<TCharacter, AntAgentBoid<TCharacte
     }
 
     public Vector3 directionToFollow;
+    public AntAgentBoid callerToFollow;
     private bool shouldFollow;
     public bool ShouldFollow
     {
@@ -423,6 +429,7 @@ public class AntAgentBoid<TCharacter> : Agent<TCharacter, AntAgentBoid<TCharacte
     {
         shouldFollow = false;
         directionToFollow = Vector3.zero;
+        callerToFollow = null;
     }
 
     public void Follow(Vector3 direction)
@@ -431,8 +438,9 @@ public class AntAgentBoid<TCharacter> : Agent<TCharacter, AntAgentBoid<TCharacte
         directionToFollow = direction;
     }
 
-    public void CallToFollow(Vector3 direction)
+    public void CallToFollow(Vector3 direction, AntAgentBoid caller)
     {
+        callerToFollow = caller;
         for (int i = 0; i < friends.Count; ++i)
             friends[i].Follow(direction);
     }
