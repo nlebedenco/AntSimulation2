@@ -29,9 +29,9 @@ public class AntAgentEvasive<TCharacter> : Agent<TCharacter, AntAgentEvasive<TCh
 
         public abstract void OnEnter();
         public abstract void OnExit();
+        public abstract IAgentState OnUpdate();
         public abstract IAgentState OnPredatorFound(IPredatorCharacter predator);
         public abstract IAgentState OnPredatorLost(IPredatorCharacter predator);
-        public abstract IAgentState OnUpdate();
     }
 
     private class Safe : AgentState
